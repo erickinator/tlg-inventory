@@ -692,22 +692,22 @@ def check_for_update():
     """Check for software updates by comparing the current version with the latest version."""
     try:
         # Hosted version.txt and EXE download links
-        version_url = "https://drive.google.com/uc?export=download&id=17qdLhSYD0RrFEz0_yz8vknUxS3HJIWbe"
-        exe_download_url = "https://drive.google.com/uc?export=download&id=1sO7a_m9w8xlHYtMkMngxW3L2Fb-5nCkP"
-        
+        version_url = "https://drive.google.com/uc?export=download&id=1wbeuHWLzSK1fQFbTW7P7lTSgB8U2B9xT"  # Updated version.txt ID
+        exe_url = "https://drive.google.com/uc?export=download&id=1DUIZEsrqxf9vjeMv-dX4FaAtA0s_M_R1"  # Permanent .exe link
+
         response = requests.get(version_url, timeout=5)
         if response.status_code == 200:
             latest_version = response.text.strip()
             if latest_version != APP_VERSION:
                 answer = messagebox.askyesno(
                     "Update Available - The Marketing Systems Collective",
-                    f"A newer version ({latest_version}) of this software is available.\n\n"
-                    "Would you like to download the latest version now?"
+                    f"A newer version ({latest_version}) is available.\n\n"
+                    "Would you like to download it now?"
                 )
                 if answer:
-                    webbrowser.open(exe_download_url)
+                    webbrowser.open(exe_url)
             else:
-                print("No update needed. Running latest version.")
+                print("You're running the latest version.")
         else:
             print("Failed to check for update.")
 
