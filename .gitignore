@@ -1,13 +1,13 @@
-# Build artifacts
+# Ignore build artifacts
 /build/
 /dist/
-*.spec
-*.exe
+/__pycache__/
+/*.spec
 
-# Python cache
-__pycache__/
-*.pyc
+# Ignore releases
+/release/
 
-# OS files
-.DS_Store
-Thumbs.db
+# (OPTIONAL) Ignore temporary files
+*.log
+*.tmp
+*.bak
