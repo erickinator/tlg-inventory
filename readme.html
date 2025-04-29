@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP to WooCommerce Import Tool - Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2980b9;
+        }
+        code {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: monospace;
+            padding: 2px 5px;
+            font-size: 0.9em;
+        }
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+        pre code {
+            border: none;
+            padding: 0;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        .highlight {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .header-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-logo">
+        <h1>ERP to WooCommerce Import Tool</h1>
+        <p>Developed by The Marketing Systems Collective</p>
+    </div>
+
+    <h2>Overview</h2>
+    <p>
+        This application bridges the gap between Great Plains ERP and WooCommerce by handling the product synchronization process. 
+        It solves a key limitation in WooCommerce's native import system, which requires separate imports for new and updated products.
+    </p>
+
+    <h2>What It Does</h2>
+    <p>The application:</p>
+    <ol>
+        <li>Takes an ERP CSV export and a WooCommerce product export as inputs</li>
+        <li>Cleans and filters the ERP data based on configurable rules</li>
+        <li>Determines which products are new vs. which need updates</li>
+        <li>Converts the ERP data format to WooCommerce's expected format</li>
+        <li>Creates separate import files for new and updated products</li>
+        <li>Provides clear next steps for importing these files into WooCommerce</li>
+    </ol>
+
+    <h2>System Requirements</h2>
+    <ul>
+        <li>Python 3.6 or higher</li>
+        <li>Required Python packages:
+            <ul>
+                <li>pandas</li>
+                <li>pillow (for logo display)</li>
+            </ul>
+        </li>
+        <li>Optional: logo.png file in the same directory as the application</li>
+    </ul>
+
+    <h2>Configuration</h2>
+    <p>
+        The application uses a <code>config.json</code> file for all settings. This file is automatically created on first run with default values that match your current setup.
+    </p>
+
+    <h3>Accessing and Editing the Configuration</h3>
+    <p>You can access the configuration in two ways:</p>
+    <ol>
+        <li><strong>From the application</strong>: Select "Configuration → Edit Configuration" from the menu. This opens the config file in your default text editor.</li>
+        <li><strong>Directly</strong>: Open the <code>config.json</code> file in any text editor. The file is stored in the same directory as the application.</li>
+    </ol>
+    <p>After editing, select "Configuration → Reload Configuration" in the application to apply your changes.</p>
+
+    <h3>Configuration Sections</h3>
+    <p>The config file is organized into several sections, each controlling different aspects of the application:</p>
+
+    <h4>Field Mapping</h4>
+    <pre><code>{
+  "field_mapping": {
+    "erp_item_field": "Item_Number",
+    "woo_sku_field": "SKU"
+  }
+}</code></pre>
+    <p>
+        This section defines which fields in your CSV files contain the unique identifiers for products. These fields are used to match products between ERP and WooCommerce.
+    </p>
+    <p>
+        <strong>When to customize</strong>: If your ERP export uses different column names for item numbers, or if your WooCommerce export uses a different field for SKUs.
+    </p>
+
+    <h4>Excluded Vendors and Categories</h4>
+    <pre><code>{
+  "excluded_vendors": [
+    "UPC CODES",
+    "HECTOR CHIN"
+  ],
+  "excluded_categories": [
+    "PARTS",
+    "SHIPPING"
+  ]
+}</code></pre>
+    <p>These sections control which records are filtered out of the ERP data before processing.</p>
+    <p><strong>When to customize</strong>:</p>
+    <ul>
+        <li>Add vendor names to exclude certain suppliers from being imported</li>
+        <li>Add category names to exclude entire product categories from processing</li>
+    </ul>
+
+    <h4>Category Mapping</h4>
+    <pre><code>{
+  "category_mapping": {
+    "TREES": "Starlit Forest Trees",
+    "FOAM FLOWE": "Foam Flowers and Greenery",
+    ...
+  }
+}</code></pre>
+    <p>
+        This dictionary maps ERP category codes to WooCommerce category names. The keys are the values found in your ERP's "Item_Class" field, and the values are the corresponding WooCommerce category names.
+    </p>
+    <p><strong>When to customize</strong>:</p>
+    <ul>
+        <li>When adding new product categories in ERP</li>
+        <li>When changing WooCommerce category names</li>
+        <li>When reorganizing your WooCommerce category structure</li>
+    </ul>
+
+    <h4>WooCommerce Columns</h4>
+    <pre><code>{
+  "woo_columns": [
+    "SKU", "Name", "Visibility in catalog", 
+    ...
+  ]
+}</code></pre>
+    <p>This section defines which columns will be included in the output files and in what order.</p>
+    <p>
+        <strong>When to customize</strong>: If you need to add or remove fields for WooCommerce imports, or change the order of columns in the output files.
+    </p>
+
+    <h4>File Name Patterns</h4>
+    <pre><code>{
+  "file_names": {
+    "new_items_pattern": "NEW_Items_{timestamp}.csv",
+    "update_items_pattern": "UPDATE_Items_{timestamp}.csv"
+  }
+}</code></pre>
+    <p>
+        This section controls the naming pattern for output files. The <code>{timestamp}</code> placeholder is automatically replaced with the current date and time when files are created.
+    </p>
+    <p>
+        <strong>When to customize</strong>: If you prefer different naming conventions for output files.
+    </p>
+
+    <h2>How Field Mapping Works</h2>
+    <p>
+        The application doesn't just copy data from ERP to WooCommerce - it transforms it according to WooCommerce's needs:
+    </p>
+
+    <h3>Core Field Transformations</h3>
+    <ul>
+        <li><strong>Product Identification</strong>: ERP Item Numbers become WooCommerce SKUs</li>
+        <li><strong>Product Naming</strong>: ERP Descriptions become WooCommerce product Names</li>
+        <li><strong>Categorization</strong>: ERP Item Classes are mapped to WooCommerce Categories using the category mapping dictionary</li>
+        <li><strong>Pricing</strong>: ERP List Prices become WooCommerce Regular Prices</li>
+        <li><strong>Inventory</strong>: ERP Quantity on Hand becomes WooCommerce Stock and determines In-stock status</li>
+        <li><strong>Details</strong>: ERP Item Notes become WooCommerce product Descriptions</li>
+        <li><strong>Order Quantities</strong>: ERP Minimum Order Quantities are mapped to WooCommerce meta fields that control minimum purchase quantities</li>
+    </ul>
+
+    <h3>Special Handling</h3>
+    <ul>
+        <li><strong>Visibility Logic</strong>: Products with certain Item Status values (like "Active" or "Discontinued") are set to hidden in WooCommerce</li>
+        <li><strong>Discontinued Products</strong>: Products in the "DISCONTINU" category have their stock set to zero and visibility set to hidden</li>
+        <li><strong>Minimum Purchase Rules</strong>: The ERP minimum order quantity is used for both the minimum allowed quantity and the quantity increment step</li>
+    </ul>
+
+    <h3>Default Values</h3>
+    <p>Many WooCommerce fields that don't have a direct ERP equivalent are set to sensible defaults:</p>
+    <ul>
+        <li>Product type is set to "simple"</li>
+        <li>Products are published by default</li>
+        <li>Tax status is set to "taxable"</li>
+        <li>Backorders are allowed</li>
+        <li>Various min/max quantity plugin settings are configured</li>
+    </ul>
+
+    <h2>Data Filtering Process</h2>
+    <p>Before comparing products and creating import files, the application cleans the ERP data:</p>
+    <ol>
+        <li><strong>Vendor Filtering</strong>: Removes products from specified vendors (e.g., placeholder vendors like "UPC CODES")</li>
+        <li><strong>Description Filtering</strong>: Removes products with specific descriptions that indicate they shouldn't be imported</li>
+        <li><strong>Category Filtering</strong>: Removes products in categories that shouldn't be synchronized with WooCommerce</li>
+    </ol>
+    <p>This filtering ensures that only relevant products are processed and imported to WooCommerce.</p>
+
+    <h2>How Product Comparison Works</h2>
+    <p>The application determines whether products are new or updates by:</p>
+    <ol>
+        <li>Loading your WooCommerce export and extracting all existing SKUs</li>
+        <li>Comparing each ERP item number against this list of SKUs</li>
+        <li>Classifying items as:
+            <ul>
+                <li><strong>New</strong>: If the ERP item number doesn't exist as a SKU in WooCommerce</li>
+                <li><strong>Update</strong>: If the ERP item number already exists as a SKU in WooCommerce</li>
+            </ul>
+        </li>
+    </ol>
+    <p>This comparison happens after filtering, so the numbers shown in the completion message reflect only the products that passed all filters.</p>
+
+    <h2>Usage Workflow</h2>
+
+    <h3>Initial Setup</h3>
+    <ol>
+        <li>Run the application for the first time</li>
+        <li>If needed, use "Configuration → Edit Configuration" to customize settings</li>
+        <li>Add a logo.png file to the application directory if desired</li>
+    </ol>
+
+    <h3>Regular Use</h3>
+    <ol>
+        <li>Export your current products from WooCommerce</li>
+        <li>Export your product data from Great Plains ERP</li>
+        <li>In the application:
+            <ul>
+                <li>Select the ERP CSV file</li>
+                <li>Select the WooCommerce export file</li>
+                <li>Choose where to save the output files</li>
+                <li>Click "Process Files"</li>
+            </ul>
+        </li>
+        <li>Import the resulting files into WooCommerce:
+            <ul>
+                <li>Import the NEW_Items file first (if created)</li>
+                <li>Import the UPDATE_Items file second (if created)</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>Handling Changes</h3>
+    <p>If your business requirements change:</p>
+    <ul>
+        <li><strong>New Categories</strong>: Edit the category_mapping section in config.json</li>
+        <li><strong>Different Vendors to Exclude</strong>: Edit the excluded_vendors section</li>
+        <li><strong>New File Naming Conventions</strong>: Edit the file_names section</li>
+        <li><strong>Field Name Changes</strong>: Edit the field_mapping section</li>
+    </ul>
+    <p>After any change to the configuration, use "Reload Configuration" in the application before processing files.</p>
+
+    <h2>Troubleshooting</h2>
+    <p>Common issues:</p>
+    <ul>
+        <li><strong>"Field not found" error</strong>: Check that your CSV column names match the expected field names in the configuration</li>
+        <li><strong>No files created</strong>: Ensure your ERP and WooCommerce exports contain data and the SKU fields are correctly mapped</li>
+        <li><strong>Empty data after import</strong>: Verify all required fields are present in your ERP export</li>
+    </ul>
+
+    <div class="highlight">
+        <h3>Key Points to Remember</h3>
+        <ul>
+            <li>The application filters data before determining new vs. update status</li>
+            <li>The numbers in the completion message reflect products after filtering</li>
+            <li>All mapping and filtering rules can be customized in the config.json file</li>
+            <li>Always reload the configuration after making changes</li>
+        </ul>
+    </div>
+
+    <h2>Support</h2>
+    <p>For questions or issues, please contact <a href="https://themarketingsystemscollective.com/contact-us/">The Marketing Systems Collective</a>.</p>
+
+    <div class="footer">
+        <p>Documentation created for ERP to WooCommerce Import Tool, explicitly for The Light Garden</p>
+        <p>© The Marketing Systems Collective</p>
+    </div>
+</body>
+</html>

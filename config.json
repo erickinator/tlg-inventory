@@ -1,0 +1,62 @@
+{
+    "field_mapping": {
+        "erp_item_field": "Item_Number",
+        "woo_sku_field": "SKU"
+    },
+    "excluded_vendors": [
+        "UPC CODES",        
+        "HECTOR CHIN"
+    ],
+    "excluded_categories": [
+        "PARTS",
+        "SHIPPING"
+    ],
+    "category_mapping": {
+        "TREES": "Starlit Forest Trees",
+        "FOAM FLOWE": "Foam Flowers and Greenery",
+        "CANDLE ACC": "Hurricanes and Candle Accessories",
+        "MISC": "Home Accents",
+        "WALL DECOR": "Wall Decor",
+        "VASES": "Vases",
+        "LANTERNS": "Lanterns & Chandeliers",
+        "RADIANCE": "Radiance LED Candles",
+        "PARTS": "Parts",
+        "ILLUMINATE": "Illuminated Branches & Trees",
+        "SHELL LAMP": "Lighting Features",
+        "MARINE": "Coastal Living",
+        "BULBS": "LED Bulbs",
+        "TABLE TOP": "Occasion Collection Table Lamps & Bottle Toppers",
+        "FLAME WAVE": "Flame Illusion Modules & Accessories",
+        "SHIPPING": "Shipping",
+        "DISCONTINU": "Discontinued",
+        "ANIMALS": "Avian Beauties",
+        "#N/A": "Uncategorized",
+        "SPRAYS": "Decorative Sprays"
+    },
+    "woo_columns": [
+        "SKU",
+        "Name",
+        "Visibility in catalog",
+        "Categories",
+        "Regular Price",
+        "Sale price",
+        "Date sale price starts",
+        "Date sale price ends",
+        "Stock",
+        "In stock?",
+        "Backorders allowed?",
+        "Type",
+        "Published",
+        "Meta: minimum_allowed_quantity",
+        "Meta: group_of_quantity",
+        "Meta: minmax_do_not_count",
+        "Meta: minmax_cart_exclude",
+        "Meta: minmax_category_group_of_exclude",
+        "Description",
+        "Tax status"
+    ],
+    "file_names": {
+        "new_items_pattern": "NEW_Items_{timestamp}.csv",
+        "update_items_pattern": "UPDATE_Items_{timestamp}.csv"
+    }
+}
