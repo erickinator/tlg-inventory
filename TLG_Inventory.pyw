@@ -11,7 +11,7 @@ import requests
 from tkinter import messagebox
 import webbrowser
 
-APP_VERSION = "1.0.3"
+APP_VERSION = "1.0.4"
 
 def load_config(config_path=None):
     """
