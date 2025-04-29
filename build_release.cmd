@@ -37,7 +37,7 @@ xcopy /Y ".\config.json" "%DIST_FOLDER%\" >nul 2>&1
 
 :: === READ VERSION FROM FILE ===
 set VERSION=
-for /f "usebackq tokens=* delims=" %%v in ("%DIST_FOLDER%\version.txt") do set VERSION=%%v
+for /f "usebackq tokens=* delims=" %%v in ("version.txt") do set VERSION=%%v
 if "%VERSION%"=="" (
     echo ERROR: version.txt not found or empty.
     pause
