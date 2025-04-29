@@ -1,42 +1,38 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: ==== Config ====
+:: === CONFIG ===
 set DIST_FOLDER=dist
 set OUTPUT_FOLDER=release
-set PY_FILE=TLG_Inventory.pyw
+set BASE_NAME=TLG_Inventory
 
-:: ==== Extract version from Python file ====
-for /f "tokens=2 delims== " %%a in ('findstr /b /c:"APP_VERSION =" "%PY_FILE%"') do (
-    set VERSION=%%~a
+:: === READ VERSION FROM FILE ===
+set VERSION=
+for /f "usebackq tokens=* delims=" %%v in ("%DIST_FOLDER%\version.txt") do set VERSION=%%v
+if "%VERSION%"=="" (
+    echo ERROR: Could not read version from version.txt!
+    pause
+    exit /b 1
 )
 
-:: Remove any quotes from version string
-set VERSION=%VERSION:"=%
-
-set ZIP_NAME=TLG_Inventory_v%VERSION%.zip
-
-:: ==== Ensure output folder exists ====
-if not exist %OUTPUT_FOLDER% (
-    mkdir %OUTPUT_FOLDER%
+:: === PREP OUTPUT FOLDER ===
+if not exist "%OUTPUT_FOLDER%" (
+    mkdir "%OUTPUT_FOLDER%"
 )
 
-:: ==== Write version.txt ====
-echo %VERSION%> %OUTPUT_FOLDER%\version.txt
+:: === DEFINE ZIP FILE NAME ===
+set ZIP_FILE=%OUTPUT_FOLDER%\%BASE_NAME%_v%VERSION%.zip
 
-:: ==== Clean old ZIP if exists ====
-if exist %OUTPUT_FOLDER%\%ZIP_NAME% (
-    del %OUTPUT_FOLDER%\%ZIP_NAME%
+:: === DELETE OLD ZIP ===
+if exist "%ZIP_FILE%" del "%ZIP_FILE%"
+
+:: === CREATE ZIP ===
+powershell -Command "Compress-Archive -Path '%DIST_FOLDER%\*' -DestinationPath '%ZIP_FILE%'"
+
+if exist "%ZIP_FILE%" (
+    echo Successfully created zip: %ZIP_FILE%
+) else (
+    echo ZIP creation failed!
+    pause
+    exit /b 1
 )
-
-:: ==== Create ZIP ====
-echo Creating package: %ZIP_NAME%
-powershell Compress-Archive -Path %DIST_FOLDER%\* -DestinationPath %OUTPUT_FOLDER%\%ZIP_NAME%
-
-echo.
-echo Done.
-echo.
-echo Version: %VERSION%
-echo ZIP located at: %OUTPUT_FOLDER%\%ZIP_NAME%
-echo version.txt created at: %OUTPUT_FOLDER%\version.txt
-pause
