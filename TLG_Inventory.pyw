@@ -311,7 +311,7 @@ class CombinedERPWooTool:
         # Help menu
         help_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Help", menu=help_menu)
-        help_menu.add_command(label="Documentation", command=self.open_documentation)  # Added
+        help_menu.add_command(label="Documentation", command=self.open_documentation)  # Updated
         help_menu.add_command(label="About", command=self.show_about)
         help_menu.add_command(label="Check for Updates", command=check_for_update)  # Added
     
@@ -379,9 +379,25 @@ This application uses a config.json file for customization.
         messagebox.showinfo("About", about_text)
     
     def open_documentation(self):
-        """Open the documentation in the default web browser"""
-        documentation_url = "https://example.com/documentation"  # Replace with actual URL
-        webbrowser.open(documentation_url)
+        """Open the readme.html file in the default web browser."""
+        try:
+            # Determine the application path
+            if getattr(sys, 'frozen', False):
+                application_path = os.path.dirname(sys.executable)
+            else:
+                application_path = os.path.dirname(os.path.abspath(__file__))
+
+            # Path to the readme.html file
+            readme_path = os.path.join(application_path, "readme.html")
+
+            # Check if the file exists
+            if os.path.exists(readme_path):
+                # Open the file in the default web browser
+                webbrowser.open(f"file://{os.path.abspath(readme_path)}")
+            else:
+                messagebox.showerror("Error", "Documentation file (readme.html) not found.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to open documentation: {str(e)}")
             
     def select_erp_file(self):
         filepath = filedialog.askopenfilename(
