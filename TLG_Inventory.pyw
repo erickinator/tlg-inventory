@@ -717,6 +717,13 @@ def check_for_update():
 
 def main():
     root = tk.Tk()
+    
+    # Set the application icon
+    try:
+        root.iconbitmap("tlg.ico")  # Ensure tlg.ico is in the same directory as the script
+    except Exception as e:
+        print(f"Error setting application icon: {e}")  # Handle missing or invalid icon file gracefully
+    
     app = CombinedERPWooTool(root)
     root.mainloop()
     
