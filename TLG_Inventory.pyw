@@ -692,8 +692,8 @@ def check_for_update():
     """Check for software updates by comparing the current version with the latest version."""
     try:
         # Hosted version.txt and EXE download links
-        version_url = "https://drive.google.com/uc?export=download&id=1wbeuHWLzSK1fQFbTW7P7lTSgB8U2B9xT"  # Updated version.txt ID
-        exe_url = "https://drive.google.com/uc?export=download&id=1DUIZEsrqxf9vjeMv-dX4FaAtA0s_M_R1"  # Permanent .exe link
+        version_url = "https://drive.google.com/uc?export=download&id=17qdLhSYD0RrFEz0_yz8vknUxS3HJIWbe"  # Updated version.txt ID
+        exe_url = "https://drive.google.com/uc?export=download&id=1w3kBfptfxJx5NLhoLPFyhLFW4P_dnZPC"  # Updated .exe link
 
         response = requests.get(version_url, timeout=5)
         if response.status_code == 200:
