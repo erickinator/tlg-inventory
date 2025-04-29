@@ -7,6 +7,11 @@ from datetime import datetime
 import json
 from PIL import Image, ImageTk  # You'll need to pip install pillow
 import webbrowser  # Added import
+import requests
+from tkinter import messagebox
+import webbrowser
+
+APP_VERSION = "1.0.0"
 
 def load_config(config_path=None):
     """
@@ -107,7 +112,7 @@ def load_config(config_path=None):
 class CombinedERPWooTool:
     def __init__(self, master):
         self.master = master
-        master.title("ERP/WooCommerce Import Builder")
+        master.title(f"ERP/WooCommerce Import Builder - Version {APP_VERSION}")
         master.geometry("700x650")  # Increased height to accommodate logo header
         
         # Load configuration
@@ -308,6 +313,7 @@ class CombinedERPWooTool:
         self.menu_bar.add_cascade(label="Help", menu=help_menu)
         help_menu.add_command(label="Documentation", command=self.open_documentation)  # Added
         help_menu.add_command(label="About", command=self.show_about)
+        help_menu.add_command(label="Check for Updates", command=check_for_update)  # Added
     
     def edit_config(self):
         """Open the config file in the default text editor, creating it if necessary."""
@@ -361,10 +367,12 @@ class CombinedERPWooTool:
     
     def show_about(self):
         """Show the about dialog"""
-        about_text = """ERP/WooCommerce Import Builder
+        about_text = f"""ERP/WooCommerce Import Builder
 
 A tool to convert ERP data to WooCommerce import format,
 identifying new and updated products automatically.
+
+Version: {APP_VERSION}
 
 This application uses a config.json file for customization.
 """
@@ -662,6 +670,33 @@ This application uses a config.json file for customization.
                 
         # Return sorted dataframe
         return df_woo[woo_columns]
+
+
+def check_for_update():
+    """Check for software updates by comparing the current version with the latest version."""
+    try:
+        # Hosted version.txt and EXE download links
+        version_url = "https://drive.google.com/uc?export=download&id=17qdLhSYD0RrFEz0_yz8vknUxS3HJIWbe"
+        exe_download_url = "https://drive.google.com/uc?export=download&id=1sO7a_m9w8xlHYtMkMngxW3L2Fb-5nCkP"
+        
+        response = requests.get(version_url, timeout=5)
+        if response.status_code == 200:
+            latest_version = response.text.strip()
+            if latest_version != APP_VERSION:
+                answer = messagebox.askyesno(
+                    "Update Available - The Marketing Systems Collective",
+                    f"A newer version ({latest_version}) of this software is available.\n\n"
+                    "Would you like to download the latest version now?"
+                )
+                if answer:
+                    webbrowser.open(exe_download_url)
+            else:
+                print("No update needed. Running latest version.")
+        else:
+            print("Failed to check for update.")
+
+    except Exception as e:
+        print(f"Update check failed: {e}")
 
 
 def main():
