@@ -16,7 +16,7 @@ if exist %PY_FILE:.pyw=.spec% (del %PY_FILE:.pyw=.spec%)
 :: === BUILD EXE WITH PYINSTALLER ===
 echo.
 echo === [1/4] Building EXE ===
-pyinstaller --noconfirm --onefile --windowed --icon "%ICON%" "%PY_FILE%"
+pyinstaller --noconfirm --onefile --windowed --icon "%ICON%" --name "TLG_Inventory" "%PY_FILE%"
 if errorlevel 1 (
     echo Build failed. Aborting.
     pause
@@ -44,7 +44,13 @@ if not exist "%DEPLOY_FOLDER%" (
 )
 
 :: Copy latest EXE
-xcopy /Y "%DIST_FOLDER%\TLG Website Inventory.exe" "%DEPLOY_FOLDER%\"
+xcopy /Y "%DIST_FOLDER%\TLG_Inventory.exe" "%DEPLOY_FOLDER%\"
+if exist "%DEPLOY_FOLDER%\TLG_Inventory.exe" (
+    echo EXE successfully copied to Google Drive.
+) else (
+    echo ERROR: EXE was not copied. Check file path and name.
+    pause
+)
 
 :: Copy version.txt
 xcopy /Y "%OUTPUT_FOLDER%\version.txt" "%DEPLOY_FOLDER%\"
