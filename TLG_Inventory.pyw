@@ -11,7 +11,7 @@ import requests
 from tkinter import messagebox
 import webbrowser
 
-APP_VERSION = "1.0.6"
+APP_VERSION = "1.0.7"
 
 def load_config(config_path=None):
     """
@@ -692,8 +692,8 @@ def check_for_update():
     """Check for software updates by comparing the current version with the latest version."""
     try:
         # Hosted version.txt and EXE download links
-        version_url = "https://drive.google.com/uc?export=download&id=17qdLhSYD0RrFEz0_yz8vknUxS3HJIWbe"  # Updated version.txt ID
-        exe_url = "https://drive.google.com/uc?export=download&id=1w3kBfptfxJx5NLhoLPFyhLFW4P_dnZPC"  # Updated .exe link
+        version_url = "https://themarketingsystemscollective.com/downloads/version.txt"  # Updated version.txt URL
+        exe_url = "https://themarketingsystemscollective.com/downloads/TLG_Installer.exe"  # Updated .exe URL
 
         response = requests.get(version_url, timeout=5)
         if response.status_code == 200:
@@ -707,12 +707,12 @@ def check_for_update():
                 if answer:
                     webbrowser.open(exe_url)
             else:
-                print("You're running the latest version.")
+                messagebox.showinfo("Update Check", "You're running the latest version.")
         else:
-            print("Failed to check for update.")
+            messagebox.showerror("Update Check", "Failed to check for updates. Please try again later.")
 
     except Exception as e:
-        print(f"Update check failed: {e}")
+        messagebox.showerror("Update Check Failed", f"An error occurred while checking for updates: {e}")
 
 
 def main():
