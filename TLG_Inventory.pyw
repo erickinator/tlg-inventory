@@ -693,7 +693,7 @@ def check_for_update():
     try:
         # Hosted version.txt and EXE download links
         version_url = "https://themarketingsystemscollective.com/downloads/version.txt"  # Updated version.txt URL
-        exe_url = "https://themarketingsystemscollective.com/downloads/TLG_Installer.exe"  # Updated .exe URL
+        exe_url = "https://themarketingsystemscollective.com/downloads/TLG_Inventory.exe"  # Updated .exe URL
 
         response = requests.get(version_url, timeout=5)
         if response.status_code == 200:
