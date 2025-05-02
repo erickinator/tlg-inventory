@@ -692,17 +692,17 @@ def check_for_update():
     """Check for software updates by comparing the current version with the latest version."""
     try:
         # Hosted version.txt and EXE download links
-        version_url = "https://themarketingsystemscollective.com/downloads/version.txt"  # Updated version.txt URL
-        exe_url = "https://themarketingsystemscollective.com/downloads/TLG_Inventory.exe"  # Updated .exe URL
+        version_url = "https://thelightgarden.com/downloads/version.txt"  # Updated version.txt URL
+        exe_url = "https://thelightgarden.com/downloads/TLG_Installer.exe"  # Updated installer URL
 
         response = requests.get(version_url, timeout=5)
         if response.status_code == 200:
             latest_version = response.text.strip()
             if latest_version != APP_VERSION:
                 answer = messagebox.askyesno(
-                    "Update Available - The Marketing Systems Collective",
+                    "Update Available - The Light Garden",
                     f"A newer version ({latest_version}) is available.\n\n"
-                    "Would you like to download it now?"
+                    "Would you like to download the latest installer now?"
                 )
                 if answer:
                     webbrowser.open(exe_url)
