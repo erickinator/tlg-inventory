@@ -11,7 +11,7 @@ import requests
 from tkinter import messagebox
 import webbrowser
 
-APP_VERSION = "1.0.7"
+APP_VERSION = "1.0.8"
 
 def load_config(config_path=None):
     """
@@ -651,7 +651,12 @@ This application uses a config.json file for customization.
         )
         
         df_woo["Regular Price"] = erp_df["List_Price"]
-        df_woo["Stock"] = erp_df["Quantity_On_Hand"]
+        
+        # Remove commas from Stock field
+        df_woo["Stock"] = erp_df["Quantity_On_Hand"].apply(
+            lambda x: str(x).replace(",", "") if pd.notna(x) else "0"
+        )
+        
         df_woo["Meta: minimum_allowed_quantity"] = erp_df["Minimum_Order_Qty"]
         df_woo["Description"] = erp_df["Item_Notes"]
         df_woo["Meta: group_of_quantity"] = erp_df["Minimum_Order_Qty"]
